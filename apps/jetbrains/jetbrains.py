@@ -3,7 +3,7 @@ import os
 import os.path
 import tempfile
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import requests
 from talon import Context, Module, actions, app, clip, ui
@@ -39,6 +39,7 @@ port_mapping = {
     "jetbrains-goland-eap": 8659,
     "jetbrains-goland": 8659,
     "jetbrains-idea-ce": 8654,
+    "IntelliJ IDEA Community Edition": 8654,
     "jetbrains-idea-eap": 8653,
     "jetbrains-idea": 8653,
     "jetbrains-phpstorm": 8662,
@@ -56,6 +57,7 @@ port_mapping = {
     "pycharm64.exe": 8658,
     "WebStorm": 8663,
     "webstorm64.exe": 8663,
+    "OpenJDK Platform binary": 8666,
 }
 
 
@@ -69,7 +71,6 @@ def _get_nonce(port: int, file_prefix: str) -> Optional[str]:
             with open(Path.home() / file_name) as fh:
                 return fh.read()
         except FileNotFoundError:
-            print(f"Could not find {file_name} in tmp or home")
             return None
     except OSError as e:
         print(e)
@@ -77,6 +78,7 @@ def _get_nonce(port: int, file_prefix: str) -> Optional[str]:
 
 
 def send_idea_command(cmd: str) -> str:
+    # app.notify("Sending idea command: ")
     active_app = ui.active_app()
     bundle = active_app.bundle or active_app.name
     port = port_mapping.get(bundle, None)
@@ -84,6 +86,7 @@ def send_idea_command(cmd: str) -> str:
         raise Exception(f"unknown application {bundle}")
     nonce = _get_nonce(port, ".vcidea_") or _get_nonce(port, "vcidea_")
     if not nonce:
+        print("Could not find neither .vcidea_ nor vcidea_ in tmp or home")
         raise FileNotFoundError(f"Couldn't find IDEA nonce file for port {port}")
 
     response = requests.get(
@@ -130,6 +133,10 @@ os: windows
 and app.name: JetBrains Rider
 os: windows
 and app.exe: /^rider64\.exe$/i
+"""
+mod.apps.jetbrains = """
+os: windows
+and app.name: OpenJDK Platform binary
 """
 
 

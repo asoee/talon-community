@@ -132,6 +132,14 @@ git (view | show | list) (requests | request):
     user.idea("action Github.View.Pull.Request")
 git (annotate | blame): user.idea("action Annotate")
 git menu: user.idea("action Vcs.QuickListPopupAction")
+# git revert line: user.idea("action Vcs.RollbackChangedLines")
+# copilot chat: user.idea("action ActivateGitHubCopilotChatToolWindow")
+# copilot open: user.idea("action copilot.openCopilot")
+# copilot inline: user.idea("action copilot.inlayContextMenu")
+# copilot complete: user.idea("action copilot.requestCompletions")
+# copilot next: user.idea("action copilot.cycleNextInlays")
+# copilot last: user.idea("action copilot.cyclePrevInlays")
+
 # Tool windows:
 # Toggling various tool windows
 toggle project: user.idea("action ActivateProjectToolWindow")
